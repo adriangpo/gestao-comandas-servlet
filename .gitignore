@@ -1,0 +1,30 @@
+# Build
+target/
+*.class
+*.jar
+*.war
+
+# IDE
+.idea/
+*.iml
+.vscode/
+.settings/
+.project
+.classpath
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Maven
+dependency-reduced-pom.xml
+buildNumber.properties
+
+# Logs
+*.log
+
+# Environment
+.env
