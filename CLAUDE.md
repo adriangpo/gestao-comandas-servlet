@@ -6,9 +6,14 @@ Web-based restaurant order management system built with Jakarta Servlet + JSP + 
 
 - Never add "Reviewed by", "Co-Authored-By", or any similar attribution lines (Sonnet, Opus, Claude, etc.) in commit messages
 
+## Code style
+
+- Never abbreviate variable/parameter names (e.g. `request` not `req`, `response` not `resp`, `statement` not `ps`, `resultSet` not `rs`)
+- Never use typographic/special Unicode characters (em-dash, en-dash, curly quotes, etc.). Use only standard ASCII equivalents: `-` instead of `--`, straight quotes instead of curly quotes, `->` instead of arrows
+
 ## Language conventions
 
-- **Java code** (methods, variables): English
+- **Java code** (methods, variables, VO fields): Portuguese, following the DB naming (e.g. `identificador`, `capacidade`, `ocupada`)
 - **VOs, DAOs, Services, Controllers** (class names): Portuguese, following the DB naming (e.g. `Produto`, `ProdutoDAO`, `ProdutoService`, `ProdutoController`)
 - **User-facing text** (JSP, labels, messages): Portuguese
 - **Code comments**: Portuguese
@@ -19,8 +24,8 @@ Web-based restaurant order management system built with Jakarta Servlet + JSP + 
 | Pacote | Responsibility |
 | --- | --- |
 | `connection` | Single DB connection class (code provided by the user) |
-| `vo` | Value Objects (DTOs) — represent entities |
-| `dao` | Data Access Objects — direct DB access |
+| `vo` | Value Objects (DTOs) - represent entities |
+| `dao` | Data Access Objects - direct DB access |
 | `service` | Business rules |
 | `controller` | Servlets handling HTTP requests |
 
@@ -34,7 +39,7 @@ Web-based restaurant order management system built with Jakarta Servlet + JSP + 
 ### `mesas`
 
 - id, identificador (name like "1", "2A"), capacidade, quantidade_pessoas, ordem_exibicao
-- Status is logical (derived from orders): has PENDENTE order → occupied, otherwise → free
+- Status is logical (derived from orders): has PENDENTE order -> ocupada, otherwise -> livre
 - quantidade_pessoas resets to 0 when the table is closed
 
 ### `pedidos`
@@ -51,18 +56,18 @@ Web-based restaurant order management system built with Jakarta Servlet + JSP + 
 
 1. Register products (name, price, description)
 2. Register tables (identifier, capacity, display order)
-3. Dashboard shows all tables ordered by `ordem_exibicao`, displaying free/occupied status
-4. When adding an order to a free table → prompt for `quantidade_pessoas` (only the first time)
-5. An occupied table can receive more orders without closing
-6. To free a table: pay (status → PAGO) or cancel (status → CANCELADO)
+3. Dashboard shows all tables ordered by `ordem_exibicao`, displaying livre/ocupada status
+4. When adding an order to a free table -> prompt for `quantidade_pessoas` (only the first time)
+5. Each table has a single active order at a time
+6. To free a table: pay (status -> PAGO) or cancel (status -> CANCELADO)
 7. On payment, display a "Nota Fiscal"-style receipt with: restaurant name, date/time, table identifier, items with quantity/unit price/subtotal, grand total
 8. quantidade_pessoas resets to 0 on close
 
 ## Order statuses
 
-- `PENDENTE` — open/active order
-- `PAGO` — processed/finished
-- `CANCELADO` — cancelled
+- `PENDENTE` - open/active order
+- `PAGO` - processed/finished
+- `CANCELADO` - cancelled
 
 ## Frontend
 
