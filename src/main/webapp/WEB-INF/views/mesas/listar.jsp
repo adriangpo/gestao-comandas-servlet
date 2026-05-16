@@ -11,6 +11,7 @@
     <a href="${pageContext.request.contextPath}/mesas?action=form" class="btn btn-primary">Nova Mesa</a>
 </div>
 
+
 <c:choose>
     <c:when test="${empty mesas}">
         <div class="empty-state">
@@ -33,7 +34,7 @@
             </thead>
             <tbody>
                 <c:forEach var="mesa" items="${mesas}">
-                    <tr data-id="${mesa.id}" draggable="true">
+                    <tr data-id="${mesa.id}" draggable="true" class="${!mesa.ativo ? 'inactive-row' : ''}">
                         <td class="drag-handle">
                             <svg width="10" height="16" viewBox="0 0 10 16" fill="currentColor">
                                 <circle cx="2" cy="2" r="1.5"/><circle cx="8" cy="2" r="1.5"/>
@@ -44,20 +45,37 @@
                         <td>Mesa ${mesa.identificador}</td>
                         <td>${mesa.capacidade} pessoas</td>
                         <td>
-                            <span class="badge ${mesa.ocupada ? 'badge-ocupada' : 'badge-free'}">
-                                ${mesa.ocupada ? 'Ocupada' : 'Livre'}
-                            </span>
+                            <c:choose>
+                                <c:when test="${!mesa.ativo}">
+                                    <span class="badge badge-inactive">Inativa</span>
+                                </c:when>
+                                <c:when test="${mesa.ocupada}">
+                                    <span class="badge badge-ocupada">Ocupada</span>
+                                </c:when>
+                                <c:otherwise>
+                                    <span class="badge badge-free">Livre</span>
+                                </c:otherwise>
+                            </c:choose>
                         </td>
                         <td class="actions">
                             <a href="${pageContext.request.contextPath}/mesas?action=form&id=${mesa.id}" class="btn btn-ghost btn-sm">Editar</a>
-                            <c:if test="${!mesa.ocupada}">
-                                <form method="post" action="${pageContext.request.contextPath}/mesas" style="display:inline">
-                                    <input type="hidden" name="action" value="delete">
-                                    <input type="hidden" name="id" value="${mesa.id}">
-                                    <button type="button" class="btn btn-danger btn-sm"
-                                            onclick="confirmSubmit(this.closest('form'), 'Excluir Mesa', 'Tem certeza que deseja excluir esta mesa?')">Excluir</button>
-                                </form>
-                            </c:if>
+                            <c:choose>
+                                <c:when test="${mesa.ativo && !mesa.ocupada}">
+                                    <form method="post" action="${pageContext.request.contextPath}/mesas" style="display:inline">
+                                        <input type="hidden" name="action" value="delete">
+                                        <input type="hidden" name="id" value="${mesa.id}">
+                                        <button type="button" class="btn btn-danger btn-sm"
+                                                onclick="confirmSubmit(this.closest('form'), 'Desativar Mesa', 'Tem certeza que deseja desativar esta mesa?')">Desativar</button>
+                                    </form>
+                                </c:when>
+                                <c:when test="${!mesa.ativo}">
+                                    <form method="post" action="${pageContext.request.contextPath}/mesas" style="display:inline">
+                                        <input type="hidden" name="action" value="reactivate">
+                                        <input type="hidden" name="id" value="${mesa.id}">
+                                        <button type="submit" class="btn btn-success btn-sm">Reativar</button>
+                                    </form>
+                                </c:when>
+                            </c:choose>
                         </td>
                     </tr>
                 </c:forEach>

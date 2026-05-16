@@ -42,7 +42,8 @@ public class MesaController extends HttpServlet {
         try {
             switch (action) {
                 case "save" -> save(request, response);
-                case "delete" -> delete(request, response);
+                case "delete" -> softDelete(request, response);
+                case "reactivate" -> reactivate(request, response);
                 case "reorder" -> reorder(request, response);
                 default -> response.sendRedirect(request.getContextPath() + "/mesas");
             }
@@ -53,7 +54,7 @@ public class MesaController extends HttpServlet {
 
     private void listAll(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, ServletException, IOException {
-        List<Mesa> tables = service.findAllOrdered();
+        List<Mesa> tables = service.findAll();
         request.setAttribute("mesas", tables);
         request.getRequestDispatcher("/WEB-INF/views/mesas/listar.jsp").forward(request, response);
     }
@@ -84,10 +85,17 @@ public class MesaController extends HttpServlet {
         response.sendRedirect(request.getContextPath() + "/mesas");
     }
 
-    private void delete(HttpServletRequest request, HttpServletResponse response)
+    private void softDelete(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, IOException {
         int id = Integer.parseInt(request.getParameter("id"));
-        service.delete(id);
+        service.softDelete(id);
+        response.sendRedirect(request.getContextPath() + "/mesas");
+    }
+
+    private void reactivate(HttpServletRequest request, HttpServletResponse response)
+            throws SQLException, IOException {
+        int id = Integer.parseInt(request.getParameter("id"));
+        service.reactivate(id);
         response.sendRedirect(request.getContextPath() + "/mesas");
     }
 

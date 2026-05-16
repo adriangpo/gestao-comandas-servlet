@@ -63,6 +63,7 @@ public class ItemPedidoDAO {
         }
     }
 
+
     public ItemPedido findByOrderAndProduct(int pedidoId, int produtoId) throws SQLException {
         String sql = "SELECT ip.*, p.nome AS nome_produto FROM itens_pedido ip " +
                 "JOIN produtos p ON ip.produto_id = p.id " +

@@ -27,8 +27,16 @@ public class MesaService {
         dao.updateOrdemExibicao(id, ordemExibicao);
     }
 
-    public void delete(int id) throws SQLException {
-        dao.delete(id);
+    public void softDelete(int id) throws SQLException {
+        dao.softDelete(id);
+    }
+
+    public void reactivate(int id) throws SQLException {
+        dao.reactivate(id);
+    }
+
+    public List<Mesa> findAll() throws SQLException {
+        return dao.findAll();
     }
 
     public void updateQuantidadePessoas(int id, int quantidadePessoas) throws SQLException {

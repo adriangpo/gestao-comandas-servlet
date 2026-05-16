@@ -96,8 +96,22 @@ public class MesaDAO {
         }
     }
 
-    public void delete(int id) throws SQLException {
-        String sql = "DELETE FROM mesas WHERE id = ?";
+    public void softDelete(int id) throws SQLException {
+        String sql = "UPDATE mesas SET ativo = FALSE WHERE id = ?";
+        java.sql.Connection sqlConnection = connection.connect();
+
+        try {
+            PreparedStatement statement = sqlConnection.prepareStatement(sql);
+            statement.setInt(1, id);
+            statement.executeUpdate();
+            statement.close();
+        } finally {
+            connection.disconnect();
+        }
+    }
+
+    public void reactivate(int id) throws SQLException {
+        String sql = "UPDATE mesas SET ativo = TRUE WHERE id = ?";
         java.sql.Connection sqlConnection = connection.connect();
 
         try {
@@ -135,6 +149,31 @@ public class MesaDAO {
     public List<Mesa> findAllOrdered() throws SQLException {
         String sql = "SELECT m.*, " +
                 "(SELECT COUNT(*) FROM pedidos p WHERE p.mesa_id = m.id AND p.status = 'PENDENTE') AS pending_count " +
+                "FROM mesas m WHERE m.ativo = TRUE ORDER BY m.ordem_exibicao";
+        java.sql.Connection sqlConnection = connection.connect();
+
+        try {
+            PreparedStatement statement = sqlConnection.prepareStatement(sql);
+            ResultSet resultSet = statement.executeQuery();
+
+            List<Mesa> list = new ArrayList<>();
+            while (resultSet.next()) {
+                Mesa mesa = mapRow(resultSet);
+                mesa.setOcupada(resultSet.getInt("pending_count") > 0);
+                list.add(mesa);
+            }
+
+            resultSet.close();
+            statement.close();
+            return list;
+        } finally {
+            connection.disconnect();
+        }
+    }
+
+    public List<Mesa> findAll() throws SQLException {
+        String sql = "SELECT m.*, " +
+                "(SELECT COUNT(*) FROM pedidos p WHERE p.mesa_id = m.id AND p.status = 'PENDENTE') AS pending_count " +
                 "FROM mesas m ORDER BY m.ordem_exibicao";
         java.sql.Connection sqlConnection = connection.connect();
 
@@ -164,6 +203,7 @@ public class MesaDAO {
         mesa.setCapacidade(resultSet.getInt("capacidade"));
         mesa.setQuantidadePessoas(resultSet.getInt("quantidade_pessoas"));
         mesa.setOrdemExibicao(resultSet.getInt("ordem_exibicao"));
+        mesa.setAtivo(resultSet.getBoolean("ativo"));
         return mesa;
     }
 }

@@ -1,3 +1,5 @@
+-- mysql -u root -p < sql/schema.sql
+
 CREATE DATABASE IF NOT EXISTS gestao_comandas;
 USE gestao_comandas;
 
@@ -14,7 +16,8 @@ CREATE TABLE mesas (
     identificador VARCHAR(10) NOT NULL UNIQUE,
     capacidade INT NOT NULL,
     quantidade_pessoas INT DEFAULT 0,
-    ordem_exibicao INT NOT NULL
+    ordem_exibicao INT NOT NULL,
+    ativo BOOLEAN DEFAULT TRUE
 );
 
 CREATE TABLE pedidos (

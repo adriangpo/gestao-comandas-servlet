@@ -8,6 +8,7 @@ public class Mesa {
     private int quantidadePessoas;
     private int ordemExibicao;
     private boolean ocupada;
+    private boolean ativo;
 
     public int getId() {
         return id;
@@ -55,5 +56,13 @@ public class Mesa {
 
     public void setOcupada(boolean ocupada) {
         this.ocupada = ocupada;
+    }
+
+    public boolean isAtivo() {
+        return ativo;
+    }
+
+    public void setAtivo(boolean ativo) {
+        this.ativo = ativo;
     }
 }
